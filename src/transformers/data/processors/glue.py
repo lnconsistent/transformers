@@ -538,11 +538,11 @@ class BoolqProcessor(DataProcessor):
         return result
     def get_train_examples(self, data_dir):
         """See base class."""
-        return self._create_examples(self.load_json(data_dir, train.jsonl), "train")
+        return self._create_examples(self.load_json(data_dir, "train.jsonl"), "train")
 
     def get_dev_examples(self, data_dir):
         """See base class."""
-        return self._create_examples(self.load_json(data_dir, val.jsonl), "dev_matched")
+        return self._create_examples(self.load_json(data_dir, "val.jsonl"), "dev_matched")
 
     def get_labels(self):
         """See base class."""
