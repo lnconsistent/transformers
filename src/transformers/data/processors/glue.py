@@ -17,6 +17,7 @@
 
 import logging
 import os
+import json
 
 from ...file_utils import is_tf_available
 from .utils import DataProcessor, InputExample, InputFeatures
@@ -526,13 +527,22 @@ class BoolqProcessor(DataProcessor):
             tensor_dict["question"].numpy().decode("utf-8"),
             str(tensor_dict["label"].numpy()),
     )
+    def load_json(self, data_dir, filename):
+        result = []
+        with open(os.path.join(data_dir, filename), 'r') as f:
+            lines = f.read().splitlines()
+            
+            for line in lines:
+                line = json.loads(line)
+                result.append(line)
+        return result
     def get_train_examples(self, data_dir):
         """See base class."""
-        return self._create_examples(self._read_tsv(os.path.join(data_dir, "train.jsonl")), "train")
+        return self._create_examples(self.load_json(data_dir, train.jsonl), "train")
 
     def get_dev_examples(self, data_dir):
         """See base class."""
-        return self._create_examples(self._read_tsv(os.path.join(data_dir, "dev.jsonl")), "dev_matched")
+        return self._create_examples(self.load_json(data_dir, val.jsonl), "dev_matched")
 
     def get_labels(self):
         """See base class."""
@@ -541,13 +551,11 @@ class BoolqProcessor(DataProcessor):
     def _create_examples(self, lines, set_type):
         """Creates examples for the training and dev sets."""
         examples = []
-        for (i, line) in enumerate(lines):
-            if i == 0:
-                continue
-            guid = "%s-%s" % (set_type, line[0])
-            text_a = line[1]
-            text_b = line[2]
-            label = line[-1]
+        for dct in lines:
+            guid = "%s-%s" % (set_type, dct['idx'])
+            text_a = dct['question']
+            text_b = dct['passage']
+            label = dct['label']
             examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
         return examples
 
