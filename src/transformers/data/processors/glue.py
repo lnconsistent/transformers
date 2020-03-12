@@ -528,11 +528,11 @@ class BoolqProcessor(DataProcessor):
     )
     def get_train_examples(self, data_dir):
         """See base class."""
-        return self._create_examples(self._read_tsv(os.path.join(data_dir, "train.tsv")), "train")
+        return self._create_examples(self._read_tsv(os.path.join(data_dir, "train.jsonl")), "train")
 
     def get_dev_examples(self, data_dir):
         """See base class."""
-        return self._create_examples(self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev_matched")
+        return self._create_examples(self._read_tsv(os.path.join(data_dir, "dev.jsonl")), "dev_matched")
 
     def get_labels(self):
         """See base class."""
@@ -561,6 +561,7 @@ glue_tasks_num_labels = {
     "qnli": 2,
     "rte": 2,
     "wnli": 2,
+    "boolq":2,
 }
 
 glue_processors = {
@@ -574,6 +575,7 @@ glue_processors = {
     "qnli": QnliProcessor,
     "rte": RteProcessor,
     "wnli": WnliProcessor,
+    "boolq": BoolqProcessor,
 }
 
 glue_output_modes = {
@@ -587,4 +589,5 @@ glue_output_modes = {
     "qnli": "classification",
     "rte": "classification",
     "wnli": "classification",
+    "boolq": "classification",
 }
